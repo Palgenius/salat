@@ -25,10 +25,10 @@ class salat extends Controller
         ];
                Date::setTranslation(new Arabic());
         $todayHijri=Date::today()->format('l d F o', Date::INDIAN_NUMBERS);;
-        $carbon =Carbon::now()->toArray();
+        $carbon =Carbon::now('GMT+3')->toArray();
         $array=['ar_times'=>$ar_times,'times'=>$times,'hijri'=>$todayHijri,'carbon'=>$carbon];
 
-        $timenow = Carbon::now()->toArray()['hour'] * 60 +  Carbon::now()->toArray()['minute'];
+        $timenow = Carbon::now('GMT+3')->toArray()['hour'] * 60 +  Carbon::now()->toArray()['minute'];
 
             $fajr=intval(explode(':',$times['Fajr'])[0])*60 +  intval(explode(':',$times['Fajr'])[1]);
             $dhuhr=intval(explode(':',$times['Dhuhr'])[0])*60 +  intval(explode(':',$times['Dhuhr'])[1]);
@@ -38,47 +38,47 @@ class salat extends Controller
         if(
             $fajr == $timenow ||  $dhuhr == $timenow ||  $asr == $timenow ||  $maghrib == $timenow ||  $isha == $timenow
             ){
-            $array['adanAfter']=60 - Carbon::now()->toArray()['second'];
+            $array['adanAfter']=60 - Carbon::now('GMT+3')->toArray()['second'];
         }
 
         if(
-            $maghrib > $timenow  &&  $maghrib+10 < $timenow
+            $maghrib < $timenow  &&  $maghrib+10 > $timenow
         ){
-            $before = $timenow+10 - $maghrib  ;
-            if($before==1)$before =60 - Carbon::now()->toArray()['second'];
+              $before = $maghrib + 10 - $timenow  ;
+            if($before==1)$before =60 - Carbon::now('GMT+3')->toArray()['second'];
             $array['eqamaAfter']= $before;
         }
         if(
-            $isha > $timenow  && $isha+10 < $timenow
+            $isha < $timenow  && $isha+10 > $timenow
         ){
             $before = $timenow+10 - $fajr  ;
-            if($before==1)$before =60 - Carbon::now()->toArray()['second'];
+            if($before==1)$before =60 - Carbon::now('GMT+3')->toArray()['second'];
             $array['eqamaAfter']= $before;
         }
 
         if(
-          $fajr > $timenow  &&  $fajr+20 < $timenow
+          $fajr < $timenow  &&  $fajr+20 > $timenow
         ){
             $before = $timenow+20 - $fajr  ;
-            if($before==1)$before =60 - Carbon::now()->toArray()['second'];
+            if($before==1)$before =60 - Carbon::now('GMT+3')->toArray()['second'];
             $array['eqamaAfter']= $before;
         }
 
         if(
 
-            $dhuhr > $timenow   &&  $dhuhr+20 < $timenow
+            $dhuhr < $timenow   &&  $dhuhr+20 > $timenow
         ){
             $before = $dhuhr+20 - $timenow  ;
-            if($before==1)$before =60 - Carbon::now()->toArray()['second'];
+            if($before==1)$before =60 - Carbon::now('GMT+3')->toArray()['second'];
             $array['eqamaAfter']= $before;
         }
 
         if(
-            $asr > $timenow   && $asr + 20 < $timenow
+            $asr < $timenow   && $asr + 20 > $timenow
         ){
 
             $before =   $asr+20  - $timenow;
-            if($before==1)$before =60 - Carbon::now()->toArray()['second'];
+            if($before==1)$before =60 - Carbon::now('GMT+3')->toArray()['second'];
             $array['eqamaAfter']= $before;
         }
 
