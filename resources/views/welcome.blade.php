@@ -1,99 +1,141 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+<head>
+	<title>Prayer</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+	<style type="text/css">
+		.list-times{
+			list-style: none;
+    		text-align: center;
+		}
+		.list-times li .name{
+			color: red;
+		    font-size: 3em;
+		    padding-right: 10%;
+            float: left;
+		}
+		.list-times li .time{
+			color: blue;
+		    font-size: 3em;
+		    padding-right: 10%;
+		}
+		.prayer-times{
+			line-height: 4;
+		}
+	</style>
 
-        <title>Laravel</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class='row'>
+			<div class="col-lg-4">
+				<h2 class="text-center prayer-times"> مواقيت الصلاة </h2>
+				<ul class="list-times">
+					<li>
+						<span class="name"> الفجر </span>
+						<span class="time"> 04:51 </span>
+					</li>
+					<li>
+						<span class="name"> الفجر </span>
+						<span class="time"> 04:51 </span>
+					</li>
+					<li>
+						<span class="name"> الفجر </span>
+						<span class="time"> 04:51 </span>
+					</li>
+					<li>
+						<span class="name"> الفجر </span>
+						<span class="time"> 04:51 </span>
+					</li>
+					<li>
+						<span class="name"> الفجر </span>
+						<span class="time"> 04:51 </span>
+					</li>
+					<li>
+						<span class="name"> الفجر </span>
+						<span class="time"> 04:51 </span>
+					</li>
+				</ul>
+			</div>
+			<div class="col-lg-8">
+				<h2 class="text-center" id="ctime"> </h2>
+				<h2 class="text-center"> <span id="hijri"></span> | <span id="melady"></span></h2>
+				<div class="img-thumble">
+					<img class="img img-responsive img-round img-thumble"
+					src="abandoned-forest-hd-wallpaper-34950.jpg">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// alert('from jquery');
+			setInterval(function () {
+                axios.get('http://localhost/salat/public/salat')
+                .then(function (response) {
+                    // handle success
+                    console.log(response.data);
+                    if(response.data.carbon.hour>12)
+                    $("#ctime").text((response.data.carbon.hour-12)+':'+response.data.carbon.minute+':'+response.data.carbon.second);
+                    else
+                    $("#ctime").text(response.data.carbon.hour+':'+response.data.carbon.minute+':'+response.data.carbon.second);
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+                    $("#hijri").text(response.data.hijri);
+                    $("#melady").text(formatDate(response.data.carbon.formatted));
+                    $(".list-times li").remove();
+                    $.each(response.data.ar_times,function(index, item) {
+                        $(".list-times").append('<li><span class="name">' +item.value+ '</span><span class="time">'+ item.key +'</span></li>');
+                    });
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .finally(function () {
 
-            .full-height {
-                height: 100vh;
-            }
+                });
+            }, 10000);
+            azan();
+		});
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+function formatDate(date) {
+    date=new Date(date);
+  var monthNames = [
+    "يناير", "فبر اير", "مارس",
+    "أبريل", "مايو", "يونيو", "يوليو",
+    "أغسطس", "سبتمبر", "أكتوبر",
+    "نوفيمبر", "ديسمبر"
+  ];
 
-            .position-ref {
-                position: relative;
-            }
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
 
-            .content {
-                text-align: center;
-            }
+function azan(){
+    var sound = new Howl({
+      src: ['https://ia800709.us.archive.org/14/items/Du3a_uP_bY_mUSLEm/046--_up_by_muslem.mp3'],
+      volume: 0.5,
+      onend: function () {
+        alert('Finished!');
+      }
+    });
+    sound.play()
+}
+	</script>
+</body>
 
-            .title {
-                font-size: 84px;
-            }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
 
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
-        </div>
-    </body>
 </html>
