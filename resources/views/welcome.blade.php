@@ -44,6 +44,7 @@
         }
         #ctime, #hijri, #melady{
             color: white;
+            font-size: 2.5vw;
             font-weight: Bold !important;
         }
         #ctime{
@@ -57,18 +58,18 @@
             border-radius: 10px;
         }
         .area-element{
-            font-size: 2em;
-
+            font-size: 2vw;
+            margin:auto;
+            vertical-align:middle;
         }
         .area{
-            display: block;
             box-sizing: content-box;
-            width: 100%;
-            height: 400px;
+            height: 20vw;
             background-color: azure;
             opacity: 0.8;
             box-shadow: 0px 2px 10px #888888;
-            align-items:center ;
+            text-align:center;
+
         }
         .div-times{
             height: 100vh;
@@ -78,7 +79,7 @@
         }
         .mosque-name{
             font-size: 4em;
-            color: #a1cbef;
+            color: #7c1a17;
             text-shadow: 2px 0px #f8fafc;
         }
 	</style>
@@ -125,7 +126,7 @@
 				<h1 class="text-center" id="ctime"> </h1>
 				<h1 class="text-center"> <span id="hijri"></span> | <span id="melady"></span></h1>
                   <br>
-                    <div id='area' class="text-center area">
+                    <div id='area' class="area">
 
                     </div>
 
@@ -152,17 +153,16 @@
                     if( response.data.eqamaAfter){
                         if(response.data.eqamaAfter.type=='s' && response.data.eqamaAfter.value == 10) azan();
                         $("#area").html(
-                            '<span  class="area-element" > '+'الوقت المتبقي لاقامة صلاة '+response.data.eqamaAfter.key+'</span>'+
-                            '<br>'+
-                            '<span  class="area-element" style="color: red;"> '+((response.data.eqamaAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+'</span>');
+                            '<h3  class="area-element" > '+'الوقت المتبقي لاقامة صلاة '+response.data.eqamaAfter.key+'</h3>'+
+                            '<h3  class="area-element" style="color: red;"> '+((response.data.eqamaAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+'</h3>');
                     }
 
                     if( response.data.adanAfter){
                         if(response.data.adanAfter.type=='s' && response.data.adanAfter.value == 10) azan();
 
                         $("#area").html(
-                            '<span  class="area-element" > '+'الوقت المتبقي لصلاة '+response.data.adanAfter.key+'</span>'+
-                            '<span  class="area-element" style="color: red;"> '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.adanAfter.value+'</span>');
+                            '<h3  class="area-element" > '+'الوقت المتبقي لصلاة '+response.data.adanAfter.key+'</h3>'+
+                            '<h3  class="area-element" style="color: red;"> '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.adanAfter.value+'</h3>');
                     }
                 })
                 .catch(function (error) {
