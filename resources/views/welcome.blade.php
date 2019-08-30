@@ -21,33 +21,34 @@
 		}
 		.list-times li .name{
 			color: red;
-		    font-size: 2.4em;
+		    font-size:3.8vw;
 		    padding-right: 10%;
             float: right;
 		}
 		.list-times li .time{
 			color: blue;
-		    font-size: 2.4em;
+		    font-size: 3.8vw;
 		    padding-right: 10%;
             float: left;
 		}
 		.prayer-times{
 			line-height: 2;
-            font-size: 3em;
+            font-size: 4vw;
 		}
         body{
             background: url('http://localhost/salat/public/img/bg.png');
             background-size: cover;
             font-family:'Tajawal Regular' !important;
             font-weight: Bold !important;
-            font-size:18px !important;
+            font-size:2vw !important;
         }
         #ctime, #hijri, #melady{
             color: white;
             font-weight: Bold !important;
         }
         #ctime{
-            padding-top: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
             border: 2px solid  #f8fafc;
             box-sizing: content-box;
             width: 25%;
@@ -57,7 +58,7 @@
         }
         .area-element{
             font-size: 2em;
-            margin: auto;
+
         }
         .area{
             display: block;
@@ -67,10 +68,11 @@
             background-color: azure;
             opacity: 0.8;
             box-shadow: 0px 2px 10px #888888;
+            align-items:center ;
         }
         .div-times{
             height: 100vh;
-            background-color: azure;
+            background-color: rgba(240,255,255,.5);
             opacity: 0.8;
             box-shadow: 0px 2px 10px #888888;
         }
@@ -84,9 +86,10 @@
 
 </head>
 <body>
-	<div class="container">
+	<div class="container-fluid">
 		<div class='row'>
 			<div class="col-lg-4 div-times">
+                <br>
 				<h2 class="text-center prayer-times"> مواقيت الصلاة </h2>
 				<ul class="list-times">
 					<li>
@@ -115,11 +118,13 @@
 					</li>
 				</ul>
 			</div>
-			<div class="col-lg-8">
+            <div class="col-lg-1">
+            </div>
+			<div class="col-lg-6">
                 <h1 class="text-center mosque-name"> مسجد بدر </h1>
 				<h1 class="text-center" id="ctime"> </h1>
 				<h1 class="text-center"> <span id="hijri"></span> | <span id="melady"></span></h1>
-
+                  <br>
                     <div id='area' class="text-center area">
 
                     </div>
@@ -145,6 +150,7 @@
                         $(".list-times").append('<li><span class="time">' +((item.value.length<5)?"0":"")+item.value+ '</span><span class="name">'+ item.key +'</span></li>');
                     });
                     if( response.data.eqamaAfter){
+                        if(response.data.eqamaAfter.type=='s' && response.data.eqamaAfter.value == 10) azan();
                         $("#area").html(
                             '<span  class="area-element" > '+'الوقت المتبقي لاقامة صلاة '+response.data.eqamaAfter.key+'</span>'+
                             '<br>'+
@@ -152,8 +158,10 @@
                     }
 
                     if( response.data.adanAfter){
+                        if(response.data.adanAfter.type=='s' && response.data.adanAfter.value == 10) azan();
+
                         $("#area").html(
-                            '<span  class="area-element" > '+response.data.adanAfter.key+'الوقت المتبقي لصلاة '+'</span>'+
+                            '<span  class="area-element" > '+'الوقت المتبقي لصلاة '+response.data.adanAfter.key+'</span>'+
                             '<span  class="area-element" style="color: red;"> '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.adanAfter.value+'</span>');
                     }
                 })
@@ -165,7 +173,7 @@
 
                 });
             }, 1000);
-            azan();
+
 		});
 
 function formatDate(date) {

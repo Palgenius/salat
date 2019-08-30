@@ -28,10 +28,10 @@ class salat extends Controller
 
 
         $ar_times=[
-           ['key'=>'الفجر','value'=>$times['Fajr'],'integer'=>$fajr,'wait'=>$longWait],
+           ['key'=>'الفجر ','value'=>$times['Fajr'],'integer'=>$fajr,'wait'=>$longWait],
            ['key'=>'الشروق','value'=>$times['Sunrise'],'integer'=>$sunrise,'wait'=>$longWait],
-           ['key'=>'الظهر','value'=>$times['Dhuhr'],'integer'=>$dhuhr,'wait'=>$longWait],
-           ['key'=>'العصر','value'=>$times['Asr'],'integer'=>$asr,'wait'=>$longWait],
+           ['key'=>'الظهر ','value'=>$times['Dhuhr'],'integer'=>$dhuhr,'wait'=>$longWait],
+           ['key'=>'العصر ','value'=>$times['Asr'],'integer'=>$asr,'wait'=>$longWait],
            ['key'=>'المغرب','value'=>$times['Maghrib'],'integer'=>$maghrib,'wait'=>$shortWait],
            ['key'=>'العشاء','value'=>$times['Isha'],'integer'=>$isha,'wait'=>$shortWait]
         ];
