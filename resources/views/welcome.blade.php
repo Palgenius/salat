@@ -4,33 +4,36 @@
 	<title>Prayer</title>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script>
+	<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
+    <script src="{{ asset('js/howler.min.js') }}"></script>
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 	<!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
 <link rel="stylesheet" href="{{ asset('font/style.css') }}">
 
     <style type="text/css">
 		.list-times{
 			list-style: none;
     		text-align: center;
+
 		}
 		.list-times li .name{
 			color: red;
-		    font-size: 3em;
+		    font-size: 2.4em;
 		    padding-right: 10%;
-            float: left;
+            float: right;
 		}
 		.list-times li .time{
 			color: blue;
-		    font-size: 3em;
+		    font-size: 2.4em;
 		    padding-right: 10%;
+            float: left;
 		}
 		.prayer-times{
-			line-height: 4;
+			line-height: 2;
+            font-size: 3em;
 		}
         body{
             background: url('http://localhost/salat/public/img/bg.png');
@@ -43,6 +46,39 @@
             color: white;
             font-weight: Bold !important;
         }
+        #ctime{
+            padding-top: 10px;
+            border: 2px solid  #f8fafc;
+            box-sizing: content-box;
+            width: 25%;
+            margin: auto;
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+        .area-element{
+            font-size: 2em;
+            margin: auto;
+        }
+        .area{
+            display: block;
+            box-sizing: content-box;
+            width: 100%;
+            height: 400px;
+            background-color: azure;
+            opacity: 0.8;
+            box-shadow: 0px 2px 10px #888888;
+        }
+        .div-times{
+            height: 100vh;
+            background-color: azure;
+            opacity: 0.8;
+            box-shadow: 0px 2px 10px #888888;
+        }
+        .mosque-name{
+            font-size: 4em;
+            color: #a1cbef;
+            text-shadow: 2px 0px #f8fafc;
+        }
 	</style>
 
 
@@ -50,7 +86,7 @@
 <body>
 	<div class="container">
 		<div class='row'>
-			<div class="col-lg-4" style="background-color: azure; opacity: 0.8; box-shadow: 0px 2px 10px #888888;">
+			<div class="col-lg-4 div-times">
 				<h2 class="text-center prayer-times"> مواقيت الصلاة </h2>
 				<ul class="list-times">
 					<li>
@@ -80,12 +116,14 @@
 				</ul>
 			</div>
 			<div class="col-lg-8">
+                <h1 class="text-center mosque-name"> مسجد بدر </h1>
 				<h1 class="text-center" id="ctime"> </h1>
 				<h1 class="text-center"> <span id="hijri"></span> | <span id="melady"></span></h1>
-				<div class="img-thumble">
-					<img class="img img-responsive img-round img-thumble"
-                src="">
-				</div>
+
+                    <div id='area' class="text-center area">
+
+                    </div>
+
 			</div>
 		</div>
 	</div>
@@ -93,21 +131,31 @@
 		$(document).ready(function(){
 			// alert('from jquery');
 			setInterval(function () {
-                axios.get('http://localhost/salat/public/salat')
+                axios.get("{{ route('salat') }}")
                 .then(function (response) {
                     // handle success
                     //console.log(response.data);
-                    if(response.data.carbon.hour>12)
-                    $("#ctime").text((response.data.carbon.hour-12)+':'+response.data.carbon.minute+':'+response.data.carbon.second);
-                    else
-                    $("#ctime").text(response.data.carbon.hour+':'+response.data.carbon.minute+':'+response.data.carbon.second);
-
+                    $("#ctime").text(((response.data.carbon.hour>12)?(response.data.carbon.hour-12):response.data.carbon.hour)+':'+response.data.carbon.minute+':'+response.data.carbon.second
+                        +((response.data.carbon.hour>12)?" م ":" ص ")
+                    );
                     $("#hijri").text(response.data.hijri);
                     $("#melady").text(formatDate(response.data.carbon.formatted));
                     $(".list-times li").remove();
                     $.each(response.data.ar_times,function(index, item) {
-                        $(".list-times").append('<li><span class="name">' +item.value+ '</span><span class="time">'+ item.key +'</span></li>');
+                        $(".list-times").append('<li><span class="time">' +((item.value.length<5)?"0":"")+item.value+ '</span><span class="name">'+ item.key +'</span></li>');
                     });
+                    if( response.data.eqamaAfter){
+                        $("#area").html(
+                            '<span  class="area-element" > '+'الوقت المتبقي لاقامة صلاة '+response.data.eqamaAfter.key+'</span>'+
+                            '<br>'+
+                            '<span  class="area-element" style="color: red;"> '+((response.data.eqamaAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+'</span>');
+                    }
+
+                    if( response.data.adanAfter){
+                        $("#area").html(
+                            '<span  class="area-element" > '+response.data.adanAfter.key+'الوقت المتبقي لصلاة '+'</span>'+
+                            '<span  class="area-element" style="color: red;"> '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.adanAfter.value+'</span>');
+                    }
                 })
                 .catch(function (error) {
                     // handle error
@@ -116,7 +164,7 @@
                 .finally(function () {
 
                 });
-            }, 10000);
+            }, 1000);
             azan();
 		});
 
@@ -141,7 +189,7 @@ function azan(){
       src: ['{{ asset("mp3/a.mp3") }}'],
       volume: 0.5,
       onend: function () {
-        alert('Finished!');
+      //  alert('Finished!');
       }
     });
     sound.play()
