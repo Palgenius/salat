@@ -14,4 +14,4 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/salat','salat@index');
+Route::get('/salat','salat@index')->name('salat');

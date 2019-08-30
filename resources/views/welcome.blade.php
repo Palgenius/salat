@@ -4,13 +4,13 @@
 	<title>Prayer</title>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script>
+	<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
+    <script src="{{ asset('js/howler.min.js') }}"></script>
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 	<!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
 <link rel="stylesheet" href="{{ asset('font/style.css') }}">
 
     <style type="text/css">
@@ -22,12 +22,13 @@
 			color: red;
 		    font-size: 3em;
 		    padding-right: 10%;
-            float: left;
+            float: right;
 		}
 		.list-times li .time{
 			color: blue;
 		    font-size: 3em;
 		    padding-right: 10%;
+            float: left;
 		}
 		.prayer-times{
 			line-height: 4;
@@ -50,7 +51,7 @@
 <body>
 	<div class="container">
 		<div class='row'>
-			<div class="col-lg-4" style="background-color: azure; opacity: 0.8; box-shadow: 0px 2px 10px #888888;">
+			<div class="col-lg-5" style="background-color: azure; opacity: 0.8; box-shadow: 0px 2px 10px #888888;">
 				<h2 class="text-center prayer-times"> مواقيت الصلاة </h2>
 				<ul class="list-times">
 					<li>
@@ -79,12 +80,11 @@
 					</li>
 				</ul>
 			</div>
-			<div class="col-lg-8">
+			<div class="col-lg-7">
 				<h1 class="text-center" id="ctime"> </h1>
 				<h1 class="text-center"> <span id="hijri"></span> | <span id="melady"></span></h1>
-				<div class="img-thumble">
-					<img class="img img-responsive img-round img-thumble"
-                src="">
+				<div  id = 'area'>
+
 				</div>
 			</div>
 		</div>
@@ -93,7 +93,7 @@
 		$(document).ready(function(){
 			// alert('from jquery');
 			setInterval(function () {
-                axios.get('http://localhost/salat/public/salat')
+                axios.get("{{ route('salat') }}")
                 .then(function (response) {
                     // handle success
                     //console.log(response.data);
@@ -106,8 +106,21 @@
                     $("#melady").text(formatDate(response.data.carbon.formatted));
                     $(".list-times li").remove();
                     $.each(response.data.ar_times,function(index, item) {
-                        $(".list-times").append('<li><span class="name">' +item.value+ '</span><span class="time">'+ item.key +'</span></li>');
+                        $(".list-times").append('<li><span class="time">' +((item.value.length<5)?"0":"")+item.value+ '</span><span class="name">'+ item.key +'</span></li>');
                     });
+                    if( response.data.eqamaAfter){
+                        $("#area").append('<div class="text-center" style="background-color: azure; opacity: 0.8; box-shadow: 0px 2px 10px #888888;" >' +
+                            '<span  class="name" > '+response.data.eqamaAfter.key+'الوقت المتبقي لاقامة الصلاة '+'</span>'+
+                            '<span  class="name" > '+((response.data.eqamaAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+'</span>'+
+                            '</div>');
+                    }
+
+                    if( response.data.adanAfter){
+                        $("#area").append('<div class="text-center" style="background-color: azure; opacity: 0.8; box-shadow: 0px 2px 10px #888888;" >' +
+                            '<span  class="name" > '+response.data.adanAfter.key+'الوقت المتبقي لصلاة '+'</span>'+
+                            '<span  class="name" > '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+'</span>'+
+                            '</div>');
+                    }
                 })
                 .catch(function (error) {
                     // handle error
@@ -141,7 +154,7 @@ function azan(){
       src: ['{{ asset("mp3/a.mp3") }}'],
       volume: 0.5,
       onend: function () {
-        alert('Finished!');
+      //  alert('Finished!');
       }
     });
     sound.play()
