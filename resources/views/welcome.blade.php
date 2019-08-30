@@ -52,7 +52,7 @@
             padding-bottom: 5px;
             border: 2px solid  #f8fafc;
             box-sizing: content-box;
-            width: 25%;
+            width: 33%;
             margin: auto;
             background-color: rgba(255,255,255,0.15);
             border-radius: 10px;
