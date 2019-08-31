@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Faker\Provider\File;
 use GeniusTS\HijriDate\Date;
 use GeniusTS\HijriDate\Translations\Arabic;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ use IslamicNetwork\PrayerTimes\PrayerTimes;
 class salat extends Controller
 {
     public  function index(){
-
+        $array=[];
         $shortWait=10;
         $longWait=20;
         $increasDicrease=[0,-1,-1,-1,2,-1];
@@ -32,6 +33,7 @@ class salat extends Controller
                 $config->Maghrib,
                 $config->Isha];
             if(Str::startswith ($config->tz,'GMT+'))$tz=$config->tz;
+            if($config->area)$array['area']=$config->area;
         }
 
 
@@ -41,7 +43,7 @@ class salat extends Controller
 
         $times=$p->getTimesForToday(31.40,34.36,$tz,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
 
-        $times=$p->getTimes(Carbon::now($tz)->subDay(5),31.40,34.36,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
+       // $times=$p->getTimes(Carbon::now($tz)->subDay(5),31.40,34.36,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
 
         $fajr=intval(explode(':',$times['Fajr'])[0])*60 +  intval(explode(':',$times['Fajr'])[1]);
         $dhuhr=intval(explode(':',$times['Dhuhr'])[0])*60 +  intval(explode(':',$times['Dhuhr'])[1]);
@@ -64,7 +66,10 @@ class salat extends Controller
         Date::setTranslation(new Arabic());
         $todayHijri=Date::today()->format('l d F o', Date::INDIAN_NUMBERS);;
         $carbon =Carbon::now($tz)->toArray();
-        $array=['ar_times'=>$ar_times,'times'=>$times,'hijri'=>$todayHijri,'carbon'=>$carbon];
+        $array['ar_times']=$ar_times;
+        $array['times']=$times;
+        $array['hijri']=$todayHijri;
+        $array['carbon']=$carbon;
         $timenow =  Carbon::now($tz)->toArray()['hour'] * 60 +  Carbon::now($tz)->toArray()['minute'];
        // $timenow = $asr+19;
 
@@ -118,8 +123,25 @@ class salat extends Controller
 
         return view('home')->with(compact('config'));
     }
+
+
+
+
     public function submit(Request $request){
 
+        if($request->input('options')== 'image'){
+            $name='area.'.$request->file('image')->extension();
+          Storage::disk('site')->put($name, $request->file('image')->get());
+
+            $request['area']= '   <img src="'.route('base').Storage::disk('site')->url($name).'"  width="100%" height="100%"> ';
+        }
+        if($request->input('options')== 'vedio'){
+
+        }
+        if($request->input('options')== 'text'){
+
+            $request['area']=$request->file('text')->get();
+        }
        // return response(json_encode($request->all()));
       Storage::disk('local')->put('config.json',json_encode($request->all()));
 

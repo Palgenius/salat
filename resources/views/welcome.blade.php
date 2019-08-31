@@ -68,6 +68,19 @@
                     $.each(response.data.ar_times,function(index, item) {
                         $(".list-times").append('<li><span class="time">' +((item.value.length<5)?"0":"")+item.value+ '</span><span class="name">'+ item.key +'</span></li>');
                     });
+
+                    var content =$("#area").html();
+
+                    if(response.data.area){
+                        if (!response.data.area.startsWith(content.substring(0,50))) {
+                            $("#area").html(
+                                response.data.area
+                            );
+                        }
+                    }
+                    else {
+                        $("#area").html('');
+                    }
                     if( response.data.eqamaAfter){
                         if(response.data.eqamaAfter.type=='s' && response.data.eqamaAfter.value == 10) azan();
                         $("#area").html(

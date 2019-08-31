@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('base');
 
 Route::get('/salat','salat@index')->name('salat');
 Route::get('/admin','salat@admin')->name('admin');

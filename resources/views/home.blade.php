@@ -9,7 +9,7 @@
                     <div class="card-header" style="text-align: center">الاعدادات</div>
                     <br>
                     <div class="card-body  ">
-                        <form method="POST" action="{{ route('submit') }}">
+                        <form method="POST" action="{{ route('submit') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group row ">
@@ -100,9 +100,10 @@
                             </div>
 
                             <div class="form-group row ">
+                                <p class="input-group-text">ادا كنت تريد تحميل العرض المرئي حدد النوع وحمله</p>
                                 <div class="col-sm-6">
                                     <label class="radio-inline">
-                                        <input type="radio" name="options" id="inlineRadio1" value="image"> 1
+                                        <input type="radio"  name="options" id="inlineRadio1" value="image"> 1
                                         <span style="padding-right: 10px;">صورة</span>
                                     </label>
                                     <label class="radio-inline">
@@ -117,15 +118,14 @@
                             </div>
                             <div class="form-group row ">
                                 <div class="col-sm-6 opt-image hidden">
-                                    <input type="file" name="image" id="exampleInputFile">
-                                    <p class="help-block">Example block-level help text here.</p>
+                                    <input type="file" name="image" id="exampleInputFile" accept="image/png, image/jpeg" >
                                 </div>
                                 <div class="col-sm-6 opt-vedio hidden">
-                                    <input type="file" name="vedio" id="exampleInputFile">
-                                    <p class="help-block">Example block-level help text here.</p>
+                                    <input type="file" name="vedio" id="exampleInputFile" accept="video/mp4">
                                 </div>
                                 <div class="col-sm-6 opt-text hidden">
-                                    <textarea class="form-control" name="text" id="" cols="30" rows="10"></textarea>
+                                    <input type="file" name="text" id="exampleInputFile" accept="text/html">
+
                                 </div>
                             </div>
                             <div class="form-group row mb-0">
@@ -144,6 +144,7 @@
 
     <script>
         $(document).ready(function () {
+
             $("[name^=options]").click(function () {
                 var $this=$(this);
                 if($this.val()=='text')
