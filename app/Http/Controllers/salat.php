@@ -6,18 +6,42 @@ use Carbon\Carbon;
 use GeniusTS\HijriDate\Date;
 use GeniusTS\HijriDate\Translations\Arabic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use IslamicNetwork\PrayerTimes\Method;
 use IslamicNetwork\PrayerTimes\PrayerTimes;
 
 class salat extends Controller
 {
     public  function index(){
+
         $shortWait=10;
         $longWait=20;
+        $increasDicrease=[0,-1,-1,-1,2,-1];
+        $tz='GMT+3';
+        if(Storage::disk('local')->exists('config.json'))
+        {
+            $config= json_decode(Storage::disk('local')->get('config.json'));
+            $shortWait=$config->shortTime;
+            $longWait=$config->longTime;
+            $increasDicrease=[
+                $config->Fajr,
+                $config->Sunrise,
+                $config->Dhuhr,
+                $config->Asr,
+                $config->Maghrib,
+                $config->Isha];
+            if(Str::startswith ($config->tz,'GMT+'))$tz=$config->tz;
+        }
+
 
         $p = new PrayerTimes(Method::METHOD_EGYPT,PrayerTimes::SCHOOL_STANDARD);
-        $times=$p->getTimesForToday(31.418889,34.351667,'GMT+3',null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
-       // $today=Carbon::now()->toDateString();
+        $p->tune($imsak = 0, $fajr= $increasDicrease[0], $sunrise = $increasDicrease[1], $dhuhr =$increasDicrease[2],
+            $asr = $increasDicrease[3], $maghrib = $increasDicrease[4], $sunset = 0, $isha = $increasDicrease[5], $midnight = 0);
+
+        $times=$p->getTimesForToday(31.40,34.36,$tz,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
+
+        $times=$p->getTimes(Carbon::now($tz)->subDay(5),31.40,34.36,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
 
         $fajr=intval(explode(':',$times['Fajr'])[0])*60 +  intval(explode(':',$times['Fajr'])[1]);
         $dhuhr=intval(explode(':',$times['Dhuhr'])[0])*60 +  intval(explode(':',$times['Dhuhr'])[1]);
@@ -36,24 +60,25 @@ class salat extends Controller
            ['key'=>'العشاء','value'=>$times['Isha'],'integer'=>$isha,'wait'=>$shortWait]
         ];
 
+
         Date::setTranslation(new Arabic());
         $todayHijri=Date::today()->format('l d F o', Date::INDIAN_NUMBERS);;
-        $carbon =Carbon::now('GMT+3')->toArray();
+        $carbon =Carbon::now($tz)->toArray();
         $array=['ar_times'=>$ar_times,'times'=>$times,'hijri'=>$todayHijri,'carbon'=>$carbon];
-        $timenow =  Carbon::now('GMT+3')->toArray()['hour'] * 60 +  Carbon::now()->toArray()['minute'];
+        $timenow =  Carbon::now($tz)->toArray()['hour'] * 60 +  Carbon::now($tz)->toArray()['minute'];
         //$timenow = $maghrib+9;
 
 
 
-
+        $array['tz']=$tz;
 
       foreach ($ar_times as $item){
              if($item['integer']-1 ==$timenow ){
-                 $array['adanAfter']=['value'=>60 - Carbon::now('GMT+3')->toArray()['second'],'type'=>'s','key'=>$item['key']];
+                 $array['adanAfter']=['value'=>60 - Carbon::now($tz)->toArray()['second'],'type'=>'s','key'=>$item['key']];
                 break;
              }
             if ($this->isComingEqama($item['integer'], $item['wait'], $timenow)) {
-                $array['eqamaAfter'] = $this->calcolateEqama($item['integer'], $item['wait'], $timenow,$item['key']);
+                $array['eqamaAfter'] = $this->calcolateEqama($item['integer'], $item['wait'], $timenow,$item['key'],$tz);
                 break;
             }
         }
@@ -76,12 +101,29 @@ class salat extends Controller
      * @param $timenow
      * @return array
      */
-    function  calcolateEqama($adan, $wiat, $timenow,$key){
+    function  calcolateEqama($adan, $wiat, $timenow,$key,$tz){
         $before =   $adan+$wiat  - $timenow;
         $type='m';
-        if($before==1){$before =60 - Carbon::now('GMT+3')->toArray()['second'];
+        if($before==1){$before =60 - Carbon::now($tz)->toArray()['second'];
             $type='s';
         }
         return ['value'=>$before,'type'=>$type,'key'=>$key];
+    }
+
+
+    public function admin(){
+        $config= [];
+        if(Storage::disk('local')->exists('config.json'))
+            $config= json_decode(Storage::disk('local')->get('config.json'));
+
+        return view('home')->with(compact('config'));
+    }
+    public function submit(Request $request){
+
+       // return response(json_encode($request->all()));
+      Storage::disk('local')->put('config.json',json_encode($request->all()));
+
+      return response('<script type="text/javascript"> alert("تمت العملية بنجاح"); 
+window.location.replace("'.route('admin').'");  </script>');
     }
 }

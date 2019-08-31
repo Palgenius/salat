@@ -16,3 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('/salat','salat@index')->name('salat');
+Route::get('/admin','salat@admin')->name('admin');
+Route::post('/submit','salat@submit')->name('submit');
