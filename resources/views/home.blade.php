@@ -99,14 +99,40 @@
 
                             </div>
 
-
+                            <div class="form-group row ">
+                                <div class="col-sm-6">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="options" id="inlineRadio1" value="image"> 1
+                                        <span style="padding-right: 10px;">صورة</span>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="options" id="inlineRadio2" value="vedio"> 2
+                                        <span style="padding-right: 10px;">فيديو</span>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="options" id="inlineRadio3" value="text"> 3
+                                        <span style="padding-right: 10px;">نص</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row ">
+                                <div class="col-sm-6 opt-image hidden">
+                                    <input type="file" name="image" id="exampleInputFile">
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                                <div class="col-sm-6 opt-vedio hidden">
+                                    <input type="file" name="vedio" id="exampleInputFile">
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                                <div class="col-sm-6 opt-text hidden">
+                                    <textarea class="form-control" name="text" id="" cols="30" rows="10"></textarea>
+                                </div>
+                            </div>
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
                                         اعتماد
                                     </button>
-
-
                                 </div>
                             </div>
                         </form>
@@ -115,4 +141,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $("[name^=options]").click(function () {
+                var $this=$(this);
+                if($this.val()=='text')
+                {
+                    if($(".opt-text").hasClass('hidden'))
+                    {
+                        $(".opt-text").removeClass('hidden');
+                        $(".opt-image").addClass('hidden');
+                        $(".opt-vedio").addClass('hidden');
+                    }
+
+                }
+                if($this.val()=='image')
+                {
+                    if($(".opt-image").hasClass('hidden'))
+                    {
+                        $(".opt-text").addClass('hidden');
+                        $(".opt-image").removeClass('hidden');
+                        $(".opt-vedio").addClass('hidden');
+                    }
+
+                }
+                if($this.val()=='vedio')
+                {
+                    if($(".opt-vedio").hasClass('hidden'))
+                    {
+                        $(".opt-text").addClass('hidden');
+                        $(".opt-image").addClass('hidden');
+                        $(".opt-vedio").removeClass('hidden');
+                    }
+                }
+                console.log($this.val());
+            });
+        });
+    </script>
 @endsection
