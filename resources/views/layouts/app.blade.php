@@ -77,7 +77,7 @@
 
         .area {
             box-sizing: content-box;
-            height: 20vw;
+            height: 15em;
             background-color: azure;
             opacity: 0.8;
             box-shadow: 0px 2px 10px #888888;

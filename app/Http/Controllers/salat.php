@@ -66,7 +66,7 @@ class salat extends Controller
         $carbon =Carbon::now($tz)->toArray();
         $array=['ar_times'=>$ar_times,'times'=>$times,'hijri'=>$todayHijri,'carbon'=>$carbon];
         $timenow =  Carbon::now($tz)->toArray()['hour'] * 60 +  Carbon::now($tz)->toArray()['minute'];
-        //$timenow = $maghrib+9;
+       // $timenow = $asr+19;
 
 
 
