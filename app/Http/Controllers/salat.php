@@ -136,6 +136,10 @@ class salat extends Controller
             $request['area']= '   <img src="'.route('base').Storage::disk('site')->url($name).'"  width="100%" height="100%"> ';
         }
         if($request->input('options')== 'vedio'){
+            $name='area.'.$request->file('vedio')->extension();
+          //  Storage::disk('site')->put($name, $request->file('vedio')->get());
+            return response()->json($name);
+         //   $request['area']= '<video width="100%" height="100%" autoplay>   <source src="'.route('base').Storage::disk('site')->url($name).'" type="video/mp4"> </video>';
 
         }
         if($request->input('options')== 'text'){
