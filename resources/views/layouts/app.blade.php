@@ -43,29 +43,33 @@
         }
 
         body {
-            background: url('http://localhost/salat/public/img/bg.png');
+            background: url("http://localhost/salat/public/img/bg.png");
             background-size: cover;
             font-family: 'Tajawal Regular' !important;
             font-weight: Bold !important;
             font-size: 2vw !important;
         }
 
-        #ctime, #hijri, #melady {
-            color: white;
-            font-size: 2.5vw;
+        #ctime,#separatetime, #hijri, #melady {
+            color: red;
+            font-size: 3vw;
             font-weight: Bold !important;
-            text-shadow: 0.05em 0.05em #0f0f0f;
+            text-shadow: 0.02em 0.02em #f8fafc;
         }
-
+        #separatetime {
+            color: white !important;
+            text-shadow: 0.05em 0.05em blue !important;
+        }
         .ctime {
-            padding-top: 5px;
-            padding-bottom: 5px;
+            color: blue !important;
+            padding: 10px;
             border: 2px solid #f8fafc;
             box-sizing: content-box;
-            width: 33%;
+            width: 55%;
             margin: auto;
             background-color: rgba(255, 255, 255, 0.15);
             border-radius: 10px;
+            font-size: 5.5vw !important;
         }
 
         .area-element {
@@ -109,7 +113,7 @@
 
         .mosque-name {
             font-size: 4em;
-            color: #7c1a17;
+            color: red;
             text-shadow: 2px 0px #f8fafc;
         }
     </style>

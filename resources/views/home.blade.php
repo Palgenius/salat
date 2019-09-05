@@ -99,7 +99,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6">
-                                    <div class="col-sm-6 opt-image">
+                                    <div class="col-sm-6 ">
                                         <input type="file" style="float:left; " name="background" id="exampleInputFile2" accept="image/png, image/jpeg" >
                                     </div>
                                 </div>

@@ -39,7 +39,7 @@
 			<div class="col-lg-6">
                 <h1 class="text-center mosque-name"> مسجد بدر </h1>
 				<h1 class="text-center ctime" id="ctime"> </h1>
-				<h1 class="text-center"> <span id="hijri"></span> | <span id="melady"></span></h1>
+                <h1 class="text-center"> <span id="hijri"></span> <span id="separatetime">|</span> <span id="melady"></span></h1>
                   <br>
                     <div id='area' class="area">
 
@@ -57,9 +57,12 @@
                     // handle success
 
                     if(response.data.background){
-                        var bg_img = $('body').css( "background" );
+
+                        var bg_img = $('body').css( 'background-image' );
+                        console.log(bg_img+" "+response.data.background);
                        if(response.data.background != bg_img){
-                           $( "body" ).css('background',bg_img);
+                           console.log(response.data.background != bg_img);
+                           $('body').css('background-image',response.data.background);
                        }
                     }
                     var hour=((response.data.carbon.hour>12)?(response.data.carbon.hour-12):response.data.carbon.hour);

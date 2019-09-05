@@ -33,8 +33,8 @@ class salat extends Controller
                 $config->Maghrib,
                 $config->Isha];
             if(Str::startswith ($config->tz,'GMT+'))$tz=$config->tz;
-            if($config->area)$array['area']=$config->area;
-            if($config->background)$array['background']=$config->background;
+            if(isset($config->area))$array['area']=$config->area;
+            if(isset($config->backgroundPath))$array['background']=$config->backgroundPath;
 
         }
 
@@ -133,8 +133,7 @@ class salat extends Controller
         if($request->hasFile('background')){
             $name='background.'.$request->file('background')->extension();
             Storage::disk('site')->put($name, $request->file('background')->get());
-            $request['background']= route('base').''.Storage::disk('site')->url($name);
-
+            $request['backgroundPath']= 'url("'.route('base').Storage::disk('site')->url($name).'")';
         }
         if($request->input('options')== 'image' && $request->hasFile('image')){
             $name='area.'.$request->file('image')->extension();
@@ -142,10 +141,10 @@ class salat extends Controller
 
             $request['area']= '   <img src="'.route('base').Storage::disk('site')->url($name).'"  width="100%" height="100%"> ';
         }
-        if($request->input('options')== 'video' && $request->hasFile('video')){
-            //$name='area.'.$request->file('video')->extension();
+        if($request->input('options')== 'video' /*&& $request->hasFile('video')*/){
+            $name='area.'.$request->file('video')->extension();
           //  Storage::disk('site')->put($name, $request->file('vedio')->get());
-        //    return response($request->file('video'));
+            ////    return response($request->file('video'));
          //   $request['area']= '<video width="100%" height="100%" autoplay>   <source src="'.route('base').Storage::disk('site')->url($name).'" type="video/mp4"> </video>';
 
         }
@@ -156,6 +155,7 @@ class salat extends Controller
        // return response(json_encode($request->all()));
       Storage::disk('local')->put('config.json',json_encode($request->all()));
 
+     // return response()->json($request->all());
       return response('<script type="text/javascript"> alert("تمت العملية بنجاح"); 
 window.location.replace("'.route('admin').'");  </script>');
     }
