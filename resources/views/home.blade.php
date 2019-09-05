@@ -57,7 +57,6 @@
                                            class="form-control @error('longTime') is-invalid @enderror" name="longTime"
                                            value="{{ old('longTime')?old('longTime'):($config)?$config->longTime:20 }}"
                                            required autofocus>
-
                                     @error('longTime')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -98,7 +97,17 @@
                                     (الفجر/الشروق/الظهر/العصر/المغرب/العشاء):</label>
 
                             </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <div class="col-sm-6 opt-image">
+                                        <input type="file" style="float:left; " name="background" id="exampleInputFile2" accept="image/png, image/jpeg" >
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p class="input-group-text"> إذا كنت تريد تحميل الخلفية </p>
+                                </div>
 
+                            </div>
                             <div class="form-group row ">
                                 <p class="input-group-text">ادا كنت تريد تحميل العرض المرئي حدد النوع وحمله</p>
                                 <div class="col-sm-6">
@@ -107,7 +116,7 @@
                                         <span style="padding-right: 10px;">صورة</span>
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="options" id="inlineRadio2" value="vedio"> 2
+                                        <input type="radio" name="options" id="inlineRadio2" value="video"> 2
                                         <span style="padding-right: 10px;">فيديو</span>
                                     </label>
                                     <label class="radio-inline">
@@ -120,8 +129,8 @@
                                 <div class="col-sm-6 opt-image hidden">
                                     <input type="file" name="image" id="exampleInputFile" accept="image/png, image/jpeg" >
                                 </div>
-                                <div class="col-sm-6 opt-vedio hidden">
-                                    <input type="file" name="vedio" id="exampleInputFile" accept="video/mp4">
+                                <div class="col-sm-6 opt-video hidden">
+                                    <input type="file" name="video" id="exampleInputFile" accept="video/mp4">
                                 </div>
                                 <div class="col-sm-6 opt-text hidden">
                                     <input type="file" name="text" id="exampleInputFile" accept="text/html">
@@ -153,7 +162,7 @@
                     {
                         $(".opt-text").removeClass('hidden');
                         $(".opt-image").addClass('hidden');
-                        $(".opt-vedio").addClass('hidden');
+                        $(".opt-video").addClass('hidden');
                     }
 
                 }
@@ -163,17 +172,17 @@
                     {
                         $(".opt-text").addClass('hidden');
                         $(".opt-image").removeClass('hidden');
-                        $(".opt-vedio").addClass('hidden');
+                        $(".opt-video").addClass('hidden');
                     }
 
                 }
-                if($this.val()=='vedio')
+                if($this.val()=='video')
                 {
-                    if($(".opt-vedio").hasClass('hidden'))
+                    if($(".opt-video").hasClass('hidden'))
                     {
                         $(".opt-text").addClass('hidden');
                         $(".opt-image").addClass('hidden');
-                        $(".opt-vedio").removeClass('hidden');
+                        $(".opt-video").removeClass('hidden');
                     }
                 }
                 console.log($this.val());

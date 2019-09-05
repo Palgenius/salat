@@ -34,6 +34,8 @@ class salat extends Controller
                 $config->Isha];
             if(Str::startswith ($config->tz,'GMT+'))$tz=$config->tz;
             if($config->area)$array['area']=$config->area;
+            if($config->background)$array['background']=$config->background;
+
         }
 
 
@@ -128,21 +130,26 @@ class salat extends Controller
 
 
     public function submit(Request $request){
+        if($request->hasFile('background')){
+            $name='background.'.$request->file('background')->extension();
+            Storage::disk('site')->put($name, $request->file('background')->get());
+            $request['background']= route('base').''.Storage::disk('site')->url($name);
 
-        if($request->input('options')== 'image'){
+        }
+        if($request->input('options')== 'image' && $request->hasFile('image')){
             $name='area.'.$request->file('image')->extension();
           Storage::disk('site')->put($name, $request->file('image')->get());
 
             $request['area']= '   <img src="'.route('base').Storage::disk('site')->url($name).'"  width="100%" height="100%"> ';
         }
-        if($request->input('options')== 'vedio'){
-            $name='area.'.$request->file('vedio')->extension();
+        if($request->input('options')== 'video' && $request->hasFile('video')){
+            //$name='area.'.$request->file('video')->extension();
           //  Storage::disk('site')->put($name, $request->file('vedio')->get());
-            return response()->json($name);
+        //    return response($request->file('video'));
          //   $request['area']= '<video width="100%" height="100%" autoplay>   <source src="'.route('base').Storage::disk('site')->url($name).'" type="video/mp4"> </video>';
 
         }
-        if($request->input('options')== 'text'){
+        if($request->input('options')== 'text' && $request->hasFile('text')){
 
             $request['area']=$request->file('text')->get();
         }

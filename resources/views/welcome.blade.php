@@ -55,6 +55,13 @@
                 axios.get("{{ route('salat') }}")
                 .then(function (response) {
                     // handle success
+
+                    if(response.data.background){
+                        var bg_img = $('body').css( "background" );
+                       if(response.data.background != bg_img){
+                           $( "body" ).css('background',bg_img);
+                       }
+                    }
                     var hour=((response.data.carbon.hour>12)?(response.data.carbon.hour-12):response.data.carbon.hour);
                     //console.log(response.data);
                     $("#ctime").text((hour+'').padStart(2,'0')+':'
