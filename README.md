@@ -12,6 +12,7 @@ https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/set-rtc-time
 
 # Laravel Prerequisite setup
 Now, you have  to go to laravel website and download laravel with its requirement, which are the last version of php and its most common libraries, also apache2, then install composer.
+
 https://www.tal.org/tutorials/raspberrypi_php_apache
 
 https://getcomposer.org/download/
