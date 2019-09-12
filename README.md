@@ -23,5 +23,5 @@ https://www.tal.org/tutorials/raspberrypi_php_apache
 
 https://getcomposer.org/download/
 
-https://laravel.com/
+https://www.laravel.com/
 
