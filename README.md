@@ -10,7 +10,8 @@ Salat is a laravel php website project, which uses both Raspberry pi 3 and Ds130
 # Wifi SETUP
 In order to use the Raspberry pi, you need to connect it to wifi and here is the link
 https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md
-<a href="https://ibb.co/GH8c4pc"><img src="https://i.ibb.co/wcPMFgM/pi-ds1307.jpg" alt="pi-ds1307" border="0"></a><br /><a target='_blank' href='https://imgbb.com/'>upload</a><br />
+<a href="https://ibb.co/GH8c4pc"><img src="https://i.ibb.co/wcPMFgM/pi-ds1307.jpg" alt="pi-ds1307" border="0"></a><br /><br />
+
 # DS1307  SETUP steps
 Ds1307 is a raspberry pi module that is used to control and precise the time of the raspberry, and it has some prior steps and here is a link for it
 
