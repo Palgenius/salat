@@ -48,5 +48,3 @@ https://www.tal.org/tutorials/raspberrypi_php_apache
 
 https://getcomposer.org/download/
 
-
-
