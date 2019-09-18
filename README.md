@@ -5,31 +5,6 @@
 
 
 Salat is a laravel php website project, which uses both Raspberry pi 3 and Ds1307, to show prayer times on a screen connected to the Raspberry pi by wifi. Moreover, it has two main screens the first one, which is shown on the screen, and the other one is an admin page, which is on the localhost of the Raspberry pi, to control the videos, images and sounds that are put on the screen. 
-## Installation
-The requirements to Laravel GitScrum application is:
-
-- **PHP - Supported Versions**: >= 7.1
-- **Webserver**: Nginx or Apache
-- **Database**: MySQL, or Maria DB
-
-[**Use Docker** - Containers: php7, nginx and mysql57](https://github.com/renatomarinho/Docker-GitScrum)
-
-### Git Clone
-
-```
-$ git clone git@github.com:GitScrum-Community/laravel-gitscrum.git
-$ cd laravel-gitscrum
-$ composer update
-$ composer run-script post-root-package-install
-```
-## Setup
-
-**Important**: If you have not the .env file in root folder, you must copy or rename the .env.example to .env
-
-#### Application URL
-
-.env file
-
 
 # Wifi SETUP
 In order to use the Raspberry pi, you need to connect it to wifi and here is the link
@@ -47,4 +22,17 @@ Now, you have  to go to laravel website and download laravel with its requiremen
 https://www.tal.org/tutorials/raspberrypi_php_apache
 
 https://getcomposer.org/download/
+
+
+## Installation
+
+```
+$ git clone https://github.com/Palgenius/salat.git
+$ cd salat
+$ composer update
+$ cp .env.example .env
+$ php artisan key:generate
+```
+
+
 
