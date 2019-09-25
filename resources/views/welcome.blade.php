@@ -39,7 +39,12 @@
             <div class="col-lg-6">
                <!-- <h1 class="text-center mosque-name"> مسجد بدر </h1>-->
                 <h1 class="text-center ctime" id="ctime"> </h1>
-                <h1 class="text-center"> <span id="hijri"></span> <span id="separatetime">|</span> <span id="melady"></span></h1>
+                <h1 class="text-center">
+				<span id="day"></span> 
+				<span id="separatetime">|</span>
+				<span id="hijri"></span> 
+				<span id="separatetime">|</span> 
+				<span id="melady"></span></h1>
                 <br>
                 <div id='area' class="area">
 
@@ -55,6 +60,8 @@
 
         <!-- Modal content -->
         <div  id="imageModal" class="modal-content">
+		<div>
+		</div>
 
         </div>
 
@@ -81,7 +88,7 @@
                         var content =$("#area").html();
 
                         if(response.data.area){
-                            if (content.length <10 || !response.data.area.startsWith(content.substring(0,75))) {
+                            if (content.length <10 || !response.data.area.startsWith(content.substring(0,65))) {
                                 $("#area").html(
                                     response.data.area
                                 );
@@ -103,6 +110,7 @@
                         );
                         $("#hijri").text(response.data.hijri);
                         $("#melady").text(formatDate(response.data.carbon.formatted));
+						$("#day").text(response.data.day);
                         $(".list-times li").remove();
 
                         $.each(response.data.ar_times,function(index, item) {
@@ -134,8 +142,9 @@
                         var modalcontent = $("#imageModal").html();
 
                         if(response.data.imageModal){
-                            if (modalcontent.length <10 || !response.data.imageModal.startsWith(modalcontent.substring(0,70))) {
+                            if (modalcontent.length <10 || !response.data.imageModal.startsWith(modalcontent.substring(0,50))) {
                                 $("#imageModal").html(response.data.imageModal);
+								console.log(response.data.imageModal.startsWith(modalcontent.substring(0,50)));
 
                             }
                         }

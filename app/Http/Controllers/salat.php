@@ -14,7 +14,24 @@ use IslamicNetwork\PrayerTimes\PrayerTimes;
 
 class salat extends Controller
 {
+	
     public  function index(){
+	
+		$weekMap = [
+    0 => 'السَّبْت',
+    1 => 'الْأحَدُ',
+    2 => 'الْاِثْنَيْنُ',
+    3 => 'الثُّلاثاء',
+    4 => 'الْأَرْبِعَاءُ',
+    5 => 'الْخَمِيسُ',
+    6 => 'الْجمعةُ',
+];
+
+
+		\GeniusTS\HijriDate\Hijri::setDefaultAdjustment(1);
+		  Date::setTranslation(new Arabic());
+        $todayHijri=Date::today()->format('d F o', Date::ARABIC_NUMBERS);;
+		
         $array=[];
         $shortWait=10;
         $longWait=20;
@@ -57,28 +74,30 @@ class salat extends Controller
 
 
         $ar_times=[
-           ['key'=>'الفجر ','value'=>$times['Fajr'],'integer'=>$fajr,'wait'=>$longWait],
+           ['key'=>'الفجر','value'=>$times['Fajr'],'integer'=>$fajr,'wait'=>$longWait],
            ['key'=>'الشروق','value'=>$times['Sunrise'],'integer'=>$sunrise,'wait'=>$longWait],
-           ['key'=>'الظهر ','value'=>$times['Dhuhr'],'integer'=>$dhuhr,'wait'=>$longWait],
-           ['key'=>'العصر ','value'=>$times['Asr'],'integer'=>$asr,'wait'=>$longWait],
+           ['key'=>'الظهر','value'=>$times['Dhuhr'],'integer'=>$dhuhr,'wait'=>$longWait],
+           ['key'=>'العصر','value'=>$times['Asr'],'integer'=>$asr,'wait'=>$longWait],
            ['key'=>'المغرب','value'=>$times['Maghrib'],'integer'=>$maghrib,'wait'=>$shortWait],
            ['key'=>'العشاء','value'=>$times['Isha'],'integer'=>$isha,'wait'=>$shortWait]
         ];
 
 
-        Date::setTranslation(new Arabic());
-        $todayHijri=Date::today()->format('l d F o', Date::ARABIC_NUMBERS);;
-        $carbon =Carbon::now($tz)->toArray();
+       $carbon =Carbon::now($tz)->toArray();
+	   $dayOfTheWeek = $carbon['dayOfWeek'];
+       $array['day']= $weekMap[$dayOfTheWeek];
+	   
         $array['ar_times']=$ar_times;
         $array['times']=$times;
         $array['hijri']=$todayHijri;
         $array['carbon']=$carbon;
         $timenow =  Carbon::now($tz)->toArray()['hour'] * 60 +  Carbon::now($tz)->toArray()['minute'];
 
-       // $timenow = $asr+19;
-         $array['showModal']=true;
-        // $array['showModal']=false;
-         $array['imageModal']=	"<img src=\"http://localhost/salat/public/img/bg.png\"  width=\"100%\" height=\"100%\"> ";
+       // $timenow = $dhuhr+19;
+       // $timenow = $fajr+45;
+        
+         $array['showModal']=false;
+         $array['imageModal']=	"<img src=\"http://localhost/salat/public/img/dsds.png\"  width=\"100%\" height=\"100%\"> ";
 
 
         $array['tz']=$tz;
@@ -86,16 +105,30 @@ class salat extends Controller
       foreach ($ar_times as $item){
              if($item['integer']-1 ==$timenow ){
                  $array['adanAfter']=['value'=>60 - Carbon::now($tz)->toArray()['second'],'type'=>'s','key'=>$item['key']];
-                break;
+              //  break;
              }
             if ($this->isComingEqama($item['integer'], $item['wait'], $timenow)) {
+				if($dayOfTheWeek== 6 &&  $item['key']=='الظهر')
+				{}else{
                 $array['eqamaAfter'] = $this->calcolateEqama($item['integer'], $item['wait'], $timenow,$item['key'],$tz);
-                break;
+				}
             }
+			if ($this->adkar($item['integer'], $item['wait'], $timenow)){
+				 $array['showModal']=true;
+			if( $item['key']=='الفجر' || $item['key']=='المغرب'){
+			  $array['imageModal']=	"<img src=\"http://localhost/salat/public/img/sab.jpg\"  width=\"100%\" height=\"100%\"> ";
+			}
+			
+			}
+		
         }
         return response()->json($array);
     }
-
+     
+	 function adkar($adan, $wiat, $timenow){
+		 return $adan + $wiat + 7 <= $timenow && $adan + $wiat + 27 >  $timenow; 
+		 
+	 }
     /**
      * @param $adan
      * @param $wiat

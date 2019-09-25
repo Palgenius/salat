@@ -53,7 +53,7 @@
             font-size: 2vw !important;
         }
 
-        #ctime,#separatetime, #hijri, #melady {
+        #ctime,#separatetime, #hijri, #melady ,#day{
             color: red;
             font-size: 2.7vw;
             font-weight: Bold !important;
@@ -130,7 +130,7 @@
             top: 0;
             width: 100%; /* Full width */
             height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
+            overflow: visible; /* Enable scroll if needed */
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
@@ -138,8 +138,8 @@
         /* Modal Content/Box */
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
+            margin: 12% auto; /* 15% from the top and centered */
+            padding: 10px;
             border: 1px solid #888;
             width: 80%; /* Could be more or less, depending on screen size */
         }
