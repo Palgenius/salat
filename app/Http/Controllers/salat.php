@@ -77,7 +77,7 @@ class salat extends Controller
 
        // $timenow = $asr+19;
          $array['showModal']=true;
-         $array['showModal']=false;
+        // $array['showModal']=false;
          $array['imageModal']=	"<img src=\"http://localhost/salat/public/uploads/area.png\"  width=\"100%\" height=\"100%\"> ";
 
 

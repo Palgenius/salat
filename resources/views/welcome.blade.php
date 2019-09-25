@@ -131,9 +131,15 @@
                                 '</h3></li>');
                         }
                         var modal = document.getElementById("myModal");
+                        var modalcontent = $("#imageModal").html();
+
                         if(response.data.imageModal){
-                            $("#imageModal").html(response.data.imageModal)
+                            if (modalcontent.length <10 || !response.data.imageModal.startsWith(modalcontent.substring(0,70))) {
+                                $("#imageModal").html(response.data.imageModal);
+
+                            }
                         }
+
                         if(response.data.showModal){
                           //imageModal
                             modal.style.display = "block";
