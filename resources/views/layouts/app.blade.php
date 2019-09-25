@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="{{ asset('font/style.css') }}">
 
     <style type="text/css">
+        html {
+            cursor :none;
+        }
         .list-times {
             list-style: none;
             text-align: center;
@@ -65,7 +68,7 @@
             padding: 10px;
             border: 2px solid #f8fafc;
             box-sizing: content-box;
-            width: 55%;
+            width: 65%;
             margin: auto;
             background-color: rgba(255, 255, 255, 0.15);
             border-radius: 10px;
