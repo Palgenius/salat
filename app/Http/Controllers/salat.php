@@ -38,6 +38,7 @@ class salat extends Controller
 
         }
 
+        if(!array_key_exists('background',$array))$array['background']='url("http://localhost/salat/public/img/bg.png")';
 
         $p = new PrayerTimes(Method::METHOD_EGYPT,PrayerTimes::SCHOOL_STANDARD);
         $p->tune($imsak = 0, $fajr= $increasDicrease[0], $sunrise = $increasDicrease[1], $dhuhr =$increasDicrease[2],
@@ -66,15 +67,18 @@ class salat extends Controller
 
 
         Date::setTranslation(new Arabic());
-        $todayHijri=Date::today()->format('l d F o', Date::INDIAN_NUMBERS);;
+        $todayHijri=Date::today()->format('l d F o', Date::ARABIC_NUMBERS);;
         $carbon =Carbon::now($tz)->toArray();
         $array['ar_times']=$ar_times;
         $array['times']=$times;
         $array['hijri']=$todayHijri;
         $array['carbon']=$carbon;
         $timenow =  Carbon::now($tz)->toArray()['hour'] * 60 +  Carbon::now($tz)->toArray()['minute'];
-       // $timenow = $asr+19;
 
+       // $timenow = $asr+19;
+         $array['showModal']=true;
+         $array['showModal']=false;
+         $array['imageModal']=	"<img src=\"http://localhost/salat/public/uploads/area.png\"  width=\"100%\" height=\"100%\"> ";
 
 
         $array['tz']=$tz;
@@ -118,6 +122,11 @@ class salat extends Controller
     }
 
 
+
+
+
+    ////////////////
+
     public function admin(){
         $config= [];
         if(Storage::disk('local')->exists('config.json'))
@@ -131,12 +140,12 @@ class salat extends Controller
 
     public function submit(Request $request){
         if($request->hasFile('background')){
-            $name='background.'.$request->file('background')->extension();
+            $name='background_'.time().'.'.$request->file('background')->extension();
             Storage::disk('site')->put($name, $request->file('background')->get());
             $request['backgroundPath']= 'url("'.route('base').Storage::disk('site')->url($name).'")';
         }
         if($request->input('options')== 'image' && $request->hasFile('image')){
-            $name='area.'.$request->file('image')->extension();
+            $name='area'.time().'.'.$request->file('image')->extension();
           Storage::disk('site')->put($name, $request->file('image')->get());
 
             $request['area']= '   <img src="'.route('base').Storage::disk('site')->url($name).'"  width="100%" height="100%"> ';

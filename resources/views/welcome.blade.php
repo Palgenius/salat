@@ -37,7 +37,7 @@
             <div class="col-lg-1">
             </div>
             <div class="col-lg-6">
-                <h1 class="text-center mosque-name"> مسجد بدر </h1>
+               <!-- <h1 class="text-center mosque-name"> مسجد بدر </h1>-->
                 <h1 class="text-center ctime" id="ctime"> </h1>
                 <h1 class="text-center"> <span id="hijri"></span> <span id="separatetime">|</span> <span id="melady"></span></h1>
                 <br>
@@ -48,6 +48,18 @@
             </div>
         </div>
     </div>
+
+
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div  id="imageModal" class="modal-content">
+
+        </div>
+
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function(){
             // alert('from jquery');
@@ -59,12 +71,29 @@
                         if(response.data.background){
 
                             var bg_img = $('body').css( 'background-image' );
-                            console.log(bg_img+" "+response.data.background);
+                         //   console.log(bg_img+" "+response.data.background);
                             if(response.data.background != bg_img){
                                 console.log(response.data.background != bg_img);
                                 $('body').css('background-image',response.data.background);
                             }
                         }
+
+                        var content =$("#area").html();
+
+                        if(response.data.area){
+                            if (content.length <10 || !response.data.area.startsWith(content.substring(0,75))) {
+                                $("#area").html(
+                                    response.data.area
+                                );
+                            }
+                        }
+                        else {
+                            $("#area").html('');
+                        }
+
+
+
+
                         var hour=((response.data.carbon.hour>12)?(response.data.carbon.hour-12):response.data.carbon.hour);
                         //console.log(response.data);
                         $("#ctime").text((hour+'').padStart(2,'0')+':'
@@ -80,25 +109,14 @@
                             $(".list-times").append('<li><span class="time">' +((item.value.length<5)?"0":"")+item.value+ '</span><span class="name">'+ item.key +'</span></li>');
                         });
 
-                        var content =$("#area").html();
 
-                        if(response.data.area){
-                            if (!response.data.area.startsWith(content.substring(0,50))) {
-                                $("#area").html(
-                                    response.data.area
-                                );
-                            }
-                        }
-                        else {
-                            $("#area").html('');
-                        }
                         if( response.data.eqamaAfter){
                             if(response.data.eqamaAfter.type=='s' && response.data.eqamaAfter.value == 10) azan();
                             // $("#area").html
                             $(".list-times").append(
                                 '<li>'+
-                                '<h3  class="time" style="color: white;font-size: 2.0vw;" > '+'الوقت المتبقي لاقامة صلاة '+response.data.eqamaAfter.key+'</h3>'+
-                                '<h3  class="time" style="color: red; align: center ;"> '+((response.data.eqamaAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+
+                                '<h3  class="text-center time" style="color: white;font-size: 2.0vw;" > '+'الوقت المتبقي لاقامة صلاة '+response.data.eqamaAfter.key+'</h3>'+
+                                '<h3  class="text-center time" style="color: red; float: none ;"> '+((response.data.eqamaAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.eqamaAfter.value+
                                 '</h3></li>');
                         }
 
@@ -108,10 +126,30 @@
                             // $("#area").html
                             $(".list-times").append(
                                 '<li>'+
-                                '<h3  class="time" style="color: white;font-size: 2.0vw;"> '+'الوقت المتبقي لصلاة '+response.data.adanAfter.key+'</h3>'+
-                                '<h3  class="time" style="color: red;float: center;"> '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.adanAfter.value+
+                                '<h3  class="text-center time" style="color: white;font-size: 2.0vw;"> '+'الوقت المتبقي لصلاة '+response.data.adanAfter.key+'</h3>'+
+                                '<h3  class="text-center time" style="color: red;float: none "> '+((response.data.adanAfter.type=='s')? 'ثانية ' : 'دقيقة ' )+response.data.adanAfter.value+
                                 '</h3></li>');
                         }
+                        var modal = document.getElementById("myModal");
+                        if(response.data.imageModal){
+                            $("#imageModal").html(response.data.imageModal)
+                        }
+                        if(response.data.showModal){
+                          //imageModal
+                            modal.style.display = "block";
+                        }
+                        else {
+                            modal.style.display = "none";
+                        }
+
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+
+
+
                     })
                     .catch(function (error) {
                         // handle error
