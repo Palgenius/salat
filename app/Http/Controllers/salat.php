@@ -28,10 +28,12 @@ class salat extends Controller
 ];
 
 
-		\GeniusTS\HijriDate\Hijri::setDefaultAdjustment(1);
-		  Date::setTranslation(new Arabic());
-        $todayHijri=Date::today()->format('d F o', Date::ARABIC_NUMBERS);;
-		
+
+
+
+
+
+
         $array=[];
         $shortWait=10;
         $longWait=20;
@@ -55,6 +57,32 @@ class salat extends Controller
 
         }
 
+       $now=Carbon::now($tz);
+        if(Storage::disk('local')->exists('time.json')) {
+            $config = json_decode(Storage::disk('local')->get('time.json'));
+            \GeniusTS\HijriDate\Hijri::setDefaultAdjustment($config->higri);
+           if($config->time) {
+               if ($config->type == 'add') {
+                   $now=$now->addMinute($config->deference);
+               }
+               else{
+                   $now=$now->subMinute($config->deference);
+               }
+           }
+        }
+        Date::setTranslation(new Arabic());
+        $todayHijri= \GeniusTS\HijriDate\Hijri::convertToHijri($now)->format('d F o', Date::ARABIC_NUMBERS);;
+
+
+
+
+
+
+
+
+
+
+
         if(!array_key_exists('background',$array))$array['background']='url("http://localhost/salat/public/img/bg.png")';
 
         $p = new PrayerTimes(Method::METHOD_EGYPT,PrayerTimes::SCHOOL_STANDARD);
@@ -63,7 +91,7 @@ class salat extends Controller
 
         $times=$p->getTimesForToday(31.40,34.36,$tz,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
 
-       // $times=$p->getTimes(Carbon::now($tz)->subDay(5),31.40,34.36,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
+       // $times=$p->getTimes($now->subDay(5),31.40,34.36,null,PrayerTimes::LATITUDE_ADJUSTMENT_METHOD_ANGLE,PrayerTimes::MIDNIGHT_MODE_STANDARD,PrayerTimes::TIME_FORMAT_12hNS);
 
         $fajr=intval(explode(':',$times['Fajr'])[0])*60 +  intval(explode(':',$times['Fajr'])[1]);
         $dhuhr=intval(explode(':',$times['Dhuhr'])[0])*60 +  intval(explode(':',$times['Dhuhr'])[1]);
@@ -83,7 +111,7 @@ class salat extends Controller
         ];
 
 
-       $carbon =Carbon::now($tz)->toArray();
+       $carbon =$now->toArray();
 	   $dayOfTheWeek = $carbon['dayOfWeek'];
        $array['day']= $weekMap[$dayOfTheWeek];
 	   
@@ -91,7 +119,7 @@ class salat extends Controller
         $array['times']=$times;
         $array['hijri']=$todayHijri;
         $array['carbon']=$carbon;
-        $timenow =  Carbon::now($tz)->toArray()['hour'] * 60 +  Carbon::now($tz)->toArray()['minute'];
+        $timenow = $now->toArray()['hour'] * 60 +  $now->toArray()['minute'];
 
        // $timenow = $dhuhr+19;
        // $timenow = $fajr+45;
@@ -104,13 +132,13 @@ class salat extends Controller
 
       foreach ($ar_times as $item){
              if($item['integer']-1 ==$timenow ){
-                 $array['adanAfter']=['value'=>60 - Carbon::now($tz)->toArray()['second'],'type'=>'s','key'=>$item['key']];
+                 $array['adanAfter']=['value'=>60 - $now->toArray()['second'],'type'=>'s','key'=>$item['key']];
               //  break;
              }
             if ($this->isComingEqama($item['integer'], $item['wait'], $timenow)) {
 				if($dayOfTheWeek== 6 &&  $item['key']=='الظهر')
 				{}else{
-                $array['eqamaAfter'] = $this->calcolateEqama($item['integer'], $item['wait'], $timenow,$item['key'],$tz);
+                $array['eqamaAfter'] = $this->calcolateEqama($item['integer'], $item['wait'], $timenow,$item['key'],$now);
 				}
             }
 			if ($this->adkar($item['integer'], $item['wait'], $timenow)){
@@ -145,10 +173,10 @@ class salat extends Controller
      * @param $timenow
      * @return array
      */
-    function  calcolateEqama($adan, $wiat, $timenow,$key,$tz){
+    function  calcolateEqama($adan, $wiat, $timenow,$key,$now){
         $before =   $adan+$wiat  - $timenow;
         $type='m';
-        if($before==1){$before =60 - Carbon::now($tz)->toArray()['second'];
+        if($before==1){$before =60 - $now->toArray()['second'];
             $type='s';
         }
         return ['value'=>$before,'type'=>$type,'key'=>$key];

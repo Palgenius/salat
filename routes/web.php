@@ -17,4 +17,6 @@ Route::get('/', function () {
 
 Route::get('/salat','salat@index')->name('salat');
 Route::get('/admin','salat@admin')->name('admin');
+Route::get('/time','TimeController@index')->name('time');
 Route::post('/submit','salat@submit')->name('submit');
+Route::post('/submit','TimeController@submit')->name('submitTime');
