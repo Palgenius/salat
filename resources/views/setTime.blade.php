@@ -36,7 +36,7 @@
                                 <div class="col-md-6">
                                     <input id="higri" type="number"
                                            class="form-control @error('higri') is-invalid @enderror" name="higri"
-                                           value="{{ old('higri')?old('higri'):isset($config)?$config->higri:0 }}"
+                                           value="{{ old('higri')?old('higri'):($config)?$config->higri:0 }}"
                                            required autofocus>
                                     @error('higri')
                                     <span class="invalid-feedback" role="alert">

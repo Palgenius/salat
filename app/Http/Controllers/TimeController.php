@@ -12,7 +12,7 @@ class TimeController extends Controller
 
     public function index(){
         $config= [];
-        if(Storage::disk('local')->exists('config.json'))
+        if(Storage::disk('local')->exists('time.json'))
             $config= json_decode(Storage::disk('local')->get('time.json'));
 
         return view('setTime')->with(compact('config'));

@@ -106,7 +106,7 @@
                         $("#ctime").text((hour+'').padStart(2,'0')+':'
                             +(response.data.carbon.minute+'').padStart(2,'0')+':'
                             +(response.data.carbon.second+'').padStart(2,'0')
-                            +((response.data.carbon.hour>12)?" م ":" ص ")
+                            +((response.data.carbon.hour>=12)?" م ":" ص ")
                         );
                         $("#hijri").text(response.data.hijri);
                         $("#melady").text(formatDate(response.data.carbon.formatted));
