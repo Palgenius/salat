@@ -15,9 +15,10 @@
 
                             <div class="form-group row ">
                                 <div class="col-md-6">
-                                    <input id="time" type="datetime-local"
+                                    <input id="time" type="text"
                                            class="form-control @error('time') is-invalid @enderror"
                                            name="time"
+
                                           >
 
                                     @error('time')
@@ -64,6 +65,19 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            var d = new Date();
+            //2019-09-10T04:04
+            var v=d.getFullYear()+'-'+twodigit(d.getMonth()+1)+'-'+twodigit(d.getDay())+'T'+twodigit(d.getHours())+':'+twodigit(d.getMinutes());
+            $("#time").val( v);
+        });
 
+        function twodigit($t) {
+            if($t<10)
+            {
+                $t='0'+$t;
+            }
+            return $t
+        }
     </script>
 @endsection

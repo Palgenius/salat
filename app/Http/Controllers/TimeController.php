@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TimeController extends Controller
 {
@@ -19,9 +20,23 @@ class TimeController extends Controller
     }
 
     public function submit(Request $request){
-      //2019-09-10T04:04
+        $tz='GMT+3';
+
+        if(Storage::disk('local')->exists('config.json'))
+        {
+            $config= json_decode(Storage::disk('local')->get('config.json'));
+            if(Str::startswith ($config->tz,'GMT+'))$tz=$config->tz;
+        }
+
+
+
+
+
+
+
+
        if($request->input('time')) {
-           $tz = 'GMT+3';
+
            $t = new  Carbon($request->input('time'));
            $n = Carbon::now($tz);
 
